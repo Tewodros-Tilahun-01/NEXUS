@@ -4,11 +4,18 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 
 export default function Nav() {
+  const navItems = [
+    { name: "Markets", href: "/markets" },
+    { name: "Features", href: "/features" },
+    { name: "How it works", href: "/how-it-works" },
+    { name: "Company", href: "/company" },
+  ];
+
   return (
     <motion.nav
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-[5%] h-[68px] bg-[#050508]/70 backdrop-blur-[18px] border-b border-[#c9a84c]/20"
+      className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-[5%] h-[68px] bg-bg/70 backdrop-blur-[18px] border-b border-gold/20"
     >
       <Link
         href="/"
@@ -18,18 +25,18 @@ export default function Nav() {
       </Link>
 
       <ul className="hidden md:flex gap-9 list-none">
-        {["Markets", "Features", "How it works", "Company"].map((item, i) => (
+        {navItems.map((item, i) => (
           <motion.li
-            key={item}
+            key={item.name}
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.1 }}
           >
             <Link
-              href={`#${item.toLowerCase().replace(" ", "-")}`}
+              href={item.href}
               className="text-muted text-[13px] font-normal tracking-widest uppercase transition-colors hover:text-gold-soft"
             >
-              {item}
+              {item.name}
             </Link>
           </motion.li>
         ))}
@@ -38,7 +45,7 @@ export default function Nav() {
       <div className="flex gap-3 items-center">
         <Link
           href="#"
-          className="bg-transparent border border-[#c9a84c]/20 text-gold-soft px-[22px] py-[9px] rounded-lg text-[13px] font-medium tracking-wide transition-all hover:border-gold hover:bg-[#c9a84c]/10"
+          className="bg-transparent border border-gold/20 text-gold-soft px-[22px] py-[9px] rounded-lg text-[13px] font-medium tracking-wide transition-all hover:border-gold hover:bg-gold/10"
         >
           Sign in
         </Link>
