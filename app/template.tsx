@@ -11,10 +11,10 @@ export default function Template({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     setShowTransition(true);
 
-    // Remove overlay after animation completes
+    // Remove overlay after both animations complete
     const timer = setTimeout(() => {
       setShowTransition(false);
-    }, 1100);
+    }, 1300);
 
     return () => clearTimeout(timer);
   }, [pathname]);
@@ -26,12 +26,12 @@ export default function Template({ children }: { children: React.ReactNode }) {
           className="fixed inset-0 pointer-events-none"
           style={{ zIndex: 9999 }}
         >
-          {/* Curtain - slides LEFT to RIGHT (close), then RIGHT to LEFT (open) */}
+          {/* First Curtain - Covers page (LEFT to RIGHT) */}
           <motion.div
             initial={{ x: "-100%" }}
-            animate={{ x: "100%" }}
+            animate={{ x: "0%" }}
             transition={{
-              duration: 1,
+              duration: 0.5,
               ease: [0.76, 0, 0.24, 1],
             }}
             style={{
@@ -45,13 +45,13 @@ export default function Template({ children }: { children: React.ReactNode }) {
               <motion.div
                 initial={{ opacity: 0, scale: 0.8, y: 20 }}
                 animate={{
-                  opacity: [0, 1, 1, 0],
-                  scale: [0.8, 1, 1, 0.8],
-                  y: [20, 0, 0, -20],
+                  opacity: [0, 1, 1, 1, 0],
+                  scale: [0.8, 1, 1, 1, 0.8],
+                  y: [20, 0, 0, 0, -20],
                 }}
                 transition={{
-                  duration: 1,
-                  times: [0, 0.2, 0.8, 1],
+                  duration: 1.2,
+                  times: [0, 0.15, 0.5, 0.85, 1],
                   ease: "easeInOut",
                 }}
                 className="font-serif text-7xl font-light tracking-wider"
@@ -69,7 +69,7 @@ export default function Template({ children }: { children: React.ReactNode }) {
                 opacity: [0, 0.6, 0.6, 0],
               }}
               transition={{
-                duration: 1,
+                duration: 1.2,
                 times: [0, 0.25, 0.75, 1],
               }}
               className="absolute top-1/2 left-1/4 right-1/4 h-px bg-gradient-to-r from-transparent via-gold to-transparent"
@@ -90,12 +90,28 @@ export default function Template({ children }: { children: React.ReactNode }) {
                   scale: [0, 1, 0],
                 }}
                 transition={{
-                  duration: 0.8,
+                  duration: 0.9,
                   delay: i * 0.08,
                 }}
               />
             ))}
           </motion.div>
+
+          {/* Second Curtain - Opens/Reveals page (LEFT to RIGHT) */}
+          <motion.div
+            initial={{ x: "-100%" }}
+            animate={{ x: "100%" }}
+            transition={{
+              duration: 0.6,
+              delay: 0.6,
+              ease: [0.76, 0, 0.24, 1],
+            }}
+            style={{
+              background:
+                "linear-gradient(90deg, #050508 0%, #0a0a12 50%, #0f0f1a 100%)",
+            }}
+            className="absolute inset-0"
+          />
         </div>
       )}
 
@@ -104,7 +120,7 @@ export default function Template({ children }: { children: React.ReactNode }) {
         key={pathname}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.3, delay: 0.6 }}
+        transition={{ duration: 0.3, delay: 0.7 }}
       >
         {children}
       </motion.div>
