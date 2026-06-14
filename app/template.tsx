@@ -11,10 +11,10 @@ export default function Template({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     setShowTransition(true);
 
-    // Remove overlay after both animations complete
+    // Remove overlay after animations complete (slower timing)
     const timer = setTimeout(() => {
       setShowTransition(false);
-    }, 1300);
+    }, 2400);
 
     return () => clearTimeout(timer);
   }, [pathname]);
@@ -26,91 +26,137 @@ export default function Template({ children }: { children: React.ReactNode }) {
           className="fixed inset-0 pointer-events-none"
           style={{ zIndex: 9999 }}
         >
-          {/* First Curtain - Covers page (LEFT to RIGHT) */}
+          {/* First Curtain - Elegant slide LEFT to RIGHT */}
           <motion.div
             initial={{ x: "-100%" }}
             animate={{ x: "0%" }}
             transition={{
-              duration: 0.5,
-              ease: [0.76, 0, 0.24, 1],
+              duration: 0.9,
+              ease: [0.65, 0, 0.35, 1],
             }}
+            className="absolute inset-0 overflow-hidden"
             style={{
               background:
-                "linear-gradient(90deg, #050508 0%, #0a0a12 50%, #0f0f1a 100%)",
+                "linear-gradient(135deg, #050508 0%, #0a0a12 40%, #0f0f1a 100%)",
             }}
-            className="absolute inset-0"
           >
+            {/* Elegant overlay pattern */}
+            <div className="absolute inset-0 opacity-10">
+              <div
+                className="absolute inset-0"
+                style={{
+                  backgroundImage:
+                    "radial-gradient(circle at 20% 50%, rgba(201, 168, 76, 0.15) 0%, transparent 50%)",
+                }}
+              />
+              <div
+                className="absolute inset-0"
+                style={{
+                  backgroundImage:
+                    "radial-gradient(circle at 80% 50%, rgba(201, 168, 76, 0.1) 0%, transparent 50%)",
+                }}
+              />
+            </div>
+
+            {/* Vertical accent lines */}
+            {[...Array(3)].map((_, i) => (
+              <motion.div
+                key={`line-${i}`}
+                className="absolute top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-gold/20 to-transparent"
+                style={{ left: `${30 + i * 20}%` }}
+                initial={{ opacity: 0, scaleY: 0 }}
+                animate={{ opacity: [0, 0.3, 0], scaleY: [0, 1, 0] }}
+                transition={{
+                  duration: 1.2,
+                  delay: i * 0.15,
+                  ease: "easeInOut",
+                }}
+              />
+            ))}
+
             {/* Brand reveal in center */}
             <div className="absolute inset-0 flex items-center justify-center">
               <motion.div
-                initial={{ opacity: 0, scale: 0.8, y: 20 }}
+                initial={{ opacity: 0, scale: 0.85, y: 30 }}
                 animate={{
                   opacity: [0, 1, 1, 1, 0],
-                  scale: [0.8, 1, 1, 1, 0.8],
-                  y: [20, 0, 0, 0, -20],
+                  scale: [0.85, 1.02, 1, 1, 0.85],
+                  y: [30, -5, 0, 0, -30],
                 }}
                 transition={{
-                  duration: 1.2,
-                  times: [0, 0.15, 0.5, 0.85, 1],
-                  ease: "easeInOut",
+                  duration: 2,
+                  times: [0, 0.2, 0.3, 0.8, 1],
+                  ease: [0.65, 0, 0.35, 1],
                 }}
-                className="font-serif text-7xl font-light tracking-wider"
+                className="font-serif text-8xl font-light tracking-[0.15em]"
               >
                 <span className="text-gold">NEX</span>
                 <span className="text-gold-soft">US</span>
               </motion.div>
             </div>
 
-            {/* Decorative gold line */}
+            {/* Elegant decorative elements */}
             <motion.div
               initial={{ scaleX: 0, opacity: 0 }}
               animate={{
                 scaleX: [0, 1, 1, 0],
-                opacity: [0, 0.6, 0.6, 0],
+                opacity: [0, 0.5, 0.5, 0],
               }}
               transition={{
-                duration: 1.2,
-                times: [0, 0.25, 0.75, 1],
+                duration: 1.8,
+                times: [0, 0.3, 0.7, 1],
+                ease: "easeInOut",
               }}
-              className="absolute top-1/2 left-1/4 right-1/4 h-px bg-gradient-to-r from-transparent via-gold to-transparent"
+              className="absolute top-1/2 left-[15%] right-[15%] h-px origin-center"
+              style={{
+                background:
+                  "linear-gradient(90deg, transparent 0%, rgba(201, 168, 76, 0.6) 50%, transparent 100%)",
+              }}
             />
 
-            {/* Particles */}
-            {[...Array(6)].map((_, i) => (
+            {/* Floating particles with glow */}
+            {[...Array(8)].map((_, i) => (
               <motion.div
-                key={i}
-                className="absolute w-1 h-1 rounded-full bg-gold"
+                key={`particle-${i}`}
+                className="absolute rounded-full"
                 style={{
-                  left: `${15 + i * 12}%`,
-                  top: `${25 + i * 8}%`,
+                  left: `${10 + i * 10}%`,
+                  top: `${20 + (i % 3) * 20}%`,
+                  width: i % 2 === 0 ? "2px" : "3px",
+                  height: i % 2 === 0 ? "2px" : "3px",
+                  background:
+                    "radial-gradient(circle, rgba(201, 168, 76, 0.8) 0%, transparent 70%)",
+                  boxShadow: "0 0 8px rgba(201, 168, 76, 0.4)",
                 }}
-                initial={{ opacity: 0, scale: 0 }}
+                initial={{ opacity: 0, scale: 0, y: 0 }}
                 animate={{
-                  opacity: [0, 0.4, 0],
-                  scale: [0, 1, 0],
+                  opacity: [0, 0.6, 0],
+                  scale: [0, 1.5, 0],
+                  y: [0, -20, -40],
                 }}
                 transition={{
-                  duration: 0.9,
-                  delay: i * 0.08,
+                  duration: 1.5,
+                  delay: 0.3 + i * 0.1,
+                  ease: "easeOut",
                 }}
               />
             ))}
           </motion.div>
 
-          {/* Second Curtain - Opens/Reveals page (RIGHT to LEFT) */}
+          {/* Second Curtain - Elegant slide RIGHT to LEFT */}
           <motion.div
             initial={{ x: "100%" }}
             animate={{ x: "-100%" }}
             transition={{
-              duration: 0.6,
-              delay: 0.6,
-              ease: [0.76, 0, 0.24, 1],
-            }}
-            style={{
-              background:
-                "linear-gradient(90deg, #0f0f1a 0%, #0a0a12 50%, #050508 100%)",
+              duration: 1,
+              delay: 1.2,
+              ease: [0.65, 0, 0.35, 1],
             }}
             className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(135deg, #0f0f1a 0%, #0a0a12 60%, #050508 100%)",
+            }}
           />
         </div>
       )}
@@ -120,7 +166,7 @@ export default function Template({ children }: { children: React.ReactNode }) {
         key={pathname}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.3, delay: 0.7 }}
+        transition={{ duration: 0.5, delay: 1.5 }}
       >
         {children}
       </motion.div>
