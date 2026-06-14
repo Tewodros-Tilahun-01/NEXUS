@@ -16,10 +16,9 @@ export default function ConstellationBg() {
       H = 0;
     const nodes: any[] = [];
     const mouse = { x: -999, y: -999 };
-    const GOLD = "#C9A84C";
-    const N = 70,
-      CONNECT_DIST = 150,
-      MOUSE_DIST = 180;
+    const N = 100;
+    const CONNECT_DIST = 180;
+    const MOUSE_DIST = 100;
 
     const resize = () => {
       W = canvas.width = window.innerWidth;
@@ -29,9 +28,9 @@ export default function ConstellationBg() {
     const mkNode = () => ({
       x: Math.random() * W,
       y: Math.random() * H,
-      vx: (Math.random() - 0.5) * 0.28,
-      vy: (Math.random() - 0.5) * 0.28,
-      r: Math.random() * 1.4 + 0.4,
+      vx: (Math.random() - 0.5) * 0.35, // Slightly faster
+      vy: (Math.random() - 0.5) * 0.35,
+      r: Math.random() * 1.8 + 0.6, // Slightly larger
       pulse: Math.random() * Math.PI * 2,
     });
 
@@ -55,45 +54,48 @@ export default function ConstellationBg() {
       nodes.forEach((n) => {
         n.x += n.vx;
         n.y += n.vy;
-        n.pulse += 0.018;
+        n.pulse += 0.02; // Slightly faster pulse
+
         if (n.x < 0 || n.x > W) n.vx *= -1;
         if (n.y < 0 || n.y > H) n.vy *= -1;
 
         const md = dist(n, mouse);
         if (md < MOUSE_DIST) {
-          const f = (1 - md / MOUSE_DIST) * 0.6;
-          n.vx += ((n.x - mouse.x) / md) * f * 0.08;
-          n.vy += ((n.y - mouse.y) / md) * f * 0.08;
+          const f = (1 - md / MOUSE_DIST) * 0.7;
+          n.vx += ((n.x - mouse.x) / md) * f * 0.1;
+          n.vy += ((n.y - mouse.y) / md) * f * 0.1;
         }
 
         const speed = Math.hypot(n.vx, n.vy);
-        const max = 0.9;
+        const max = 1.0;
         if (speed > max) {
           n.vx = (n.vx / speed) * max;
           n.vy = (n.vy / speed) * max;
         }
       });
 
+      // Draw connections
       for (let i = 0; i < nodes.length; i++) {
         for (let j = i + 1; j < nodes.length; j++) {
           const d = dist(nodes[i], nodes[j]);
           if (d < CONNECT_DIST) {
-            const alpha = (1 - d / CONNECT_DIST) * 0.22;
+            const alpha = (1 - d / CONNECT_DIST) * 0.28; // Increased visibility
             ctx.beginPath();
             ctx.moveTo(nodes[i].x, nodes[i].y);
             ctx.lineTo(nodes[j].x, nodes[j].y);
             ctx.strokeStyle = `rgba(201,168,76,${alpha})`;
-            ctx.lineWidth = 0.5;
+            ctx.lineWidth = 0.6; // Slightly thicker
             ctx.stroke();
           }
         }
       }
 
+      // Draw nodes
       nodes.forEach((n) => {
         const glow = 0.5 + Math.sin(n.pulse) * 0.5;
         ctx.beginPath();
         ctx.arc(n.x, n.y, n.r * (1 + glow * 0.5), 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(201,168,76,${0.35 + glow * 0.45})`;
+        ctx.fillStyle = `rgba(201,168,76,${0.4 + glow * 0.5})`; // Brighter
         ctx.fill();
       });
 
