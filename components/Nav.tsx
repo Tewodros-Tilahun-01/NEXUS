@@ -44,13 +44,13 @@ export default function Nav() {
 
       <div className="flex gap-3 items-center">
         <Link
-          href="#"
+          href="/login"
           className="bg-transparent border border-gold/20 text-gold-soft px-[22px] py-[9px] rounded-lg text-[13px] font-medium tracking-wide transition-all hover:border-gold hover:bg-gold/10"
         >
           Sign in
         </Link>
         <Link
-          href="#"
+          href="/signup"
           className="bg-gold text-[#060508] px-[22px] py-[9px] rounded-lg text-[13px] font-semibold tracking-wide transition-all hover:opacity-90 hover:-translate-y-px"
         >
           Get started
