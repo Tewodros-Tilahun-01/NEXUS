@@ -93,7 +93,7 @@ export default function CompanyPage() {
               {
                 name: "James Kim",
                 role: "Head of Trading",
-                role: "Ex-Citadel quant trader. PhD in Mathematics.",
+                bio: "Ex-Citadel quant trader. PhD in Mathematics.",
               },
             ].map((person) => (
               <div key={person.name} className="text-center">
