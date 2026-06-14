@@ -97,10 +97,10 @@ export default function Template({ children }: { children: React.ReactNode }) {
             ))}
           </motion.div>
 
-          {/* Second Curtain - Opens/Reveals page (LEFT to RIGHT) */}
+          {/* Second Curtain - Opens/Reveals page (RIGHT to LEFT) */}
           <motion.div
-            initial={{ x: "-100%" }}
-            animate={{ x: "100%" }}
+            initial={{ x: "100%" }}
+            animate={{ x: "-100%" }}
             transition={{
               duration: 0.6,
               delay: 0.6,
@@ -108,7 +108,7 @@ export default function Template({ children }: { children: React.ReactNode }) {
             }}
             style={{
               background:
-                "linear-gradient(90deg, #050508 0%, #0a0a12 50%, #0f0f1a 100%)",
+                "linear-gradient(90deg, #0f0f1a 0%, #0a0a12 50%, #050508 100%)",
             }}
             className="absolute inset-0"
           />
