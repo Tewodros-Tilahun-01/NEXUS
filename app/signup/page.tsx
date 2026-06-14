@@ -67,7 +67,7 @@ export default function SignupPage() {
       >
         <Link
           href="/"
-          className="font-serif text-xl font-semibold text-gold tracking-wider mb-20"
+          className="font-serif text-xl font-semibold text-gold tracking-wider mb-8"
         >
           NEX<span className="text-text">US</span>
         </Link>
