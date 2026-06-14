@@ -14,7 +14,7 @@ export default function Template({ children }: { children: React.ReactNode }) {
     // Remove overlay after animation completes
     const timer = setTimeout(() => {
       setShowTransition(false);
-    }, 1100); // Total animation time
+    }, 1100);
 
     return () => clearTimeout(timer);
   }, [pathname]);
@@ -26,17 +26,17 @@ export default function Template({ children }: { children: React.ReactNode }) {
           className="fixed inset-0 pointer-events-none"
           style={{ zIndex: 9999 }}
         >
-          {/* Closing Curtain - slides from right to left */}
+          {/* Curtain - slides LEFT to RIGHT (close), then RIGHT to LEFT (open) */}
           <motion.div
-            initial={{ x: "100%" }}
-            animate={{ x: "-100%" }}
+            initial={{ x: "-100%" }}
+            animate={{ x: "100%" }}
             transition={{
               duration: 1,
               ease: [0.76, 0, 0.24, 1],
             }}
             style={{
               background:
-                "linear-gradient(90deg, #0f0f1a 0%, #0a0a12 50%, #050508 100%)",
+                "linear-gradient(90deg, #050508 0%, #0a0a12 50%, #0f0f1a 100%)",
             }}
             className="absolute inset-0"
           >
