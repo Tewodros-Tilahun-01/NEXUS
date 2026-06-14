@@ -66,26 +66,6 @@ export default function LoginPage() {
           transition={{ duration: 0.7 }}
           className="text-center mb-10"
         >
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.2, type: "spring" }}
-            className="inline-flex items-center justify-center w-16 h-16 mb-6 rounded-2xl bg-gold/10 border border-gold/30 backdrop-blur-sm"
-          >
-            <svg
-              className="w-8 h-8 text-gold"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-              />
-            </svg>
-          </motion.div>
           <h1 className="font-serif text-5xl font-light mb-3">
             Welcome <em className="italic text-gold">back</em>
           </h1>

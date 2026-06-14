@@ -76,31 +76,6 @@ export default function SignupPage() {
           transition={{ duration: 0.7 }}
           className="text-center mb-10"
         >
-          <motion.div
-            initial={{ scale: 0, rotate: -180 }}
-            animate={{ scale: 1, rotate: 0 }}
-            transition={{
-              duration: 0.7,
-              delay: 0.2,
-              type: "spring",
-              stiffness: 200,
-            }}
-            className="inline-flex items-center justify-center w-16 h-16 mb-6 rounded-2xl bg-gold/10 border border-gold/30 backdrop-blur-sm"
-          >
-            <svg
-              className="w-8 h-8 text-gold"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
-              />
-            </svg>
-          </motion.div>
           <h1 className="font-serif text-5xl font-light mb-3">
             Start <em className="italic text-gold">trading</em>
           </h1>
