@@ -1,26 +1,37 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function Template({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const [showTransition, setShowTransition] = useState(true);
+
+  useEffect(() => {
+    setShowTransition(true);
+
+    // Remove overlay after animation completes
+    const timer = setTimeout(() => {
+      setShowTransition(false);
+    }, 1100); // Total animation time
+
+    return () => clearTimeout(timer);
+  }, [pathname]);
 
   return (
     <>
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={`transition-${pathname}`}
+      {showTransition && (
+        <div
           className="fixed inset-0 pointer-events-none"
           style={{ zIndex: 9999 }}
         >
           {/* Closing Curtain - slides from right to left */}
           <motion.div
             initial={{ x: "100%" }}
-            animate={{ x: "0%" }}
-            exit={{ x: "-100%" }}
+            animate={{ x: "-100%" }}
             transition={{
-              duration: 0.5,
+              duration: 1,
               ease: [0.76, 0, 0.24, 1],
             }}
             style={{
@@ -34,13 +45,13 @@ export default function Template({ children }: { children: React.ReactNode }) {
               <motion.div
                 initial={{ opacity: 0, scale: 0.8, y: 20 }}
                 animate={{
-                  opacity: [0, 1, 1, 1, 0],
-                  scale: [0.8, 1, 1, 1, 0.8],
-                  y: [20, 0, 0, 0, -20],
+                  opacity: [0, 1, 1, 0],
+                  scale: [0.8, 1, 1, 0.8],
+                  y: [20, 0, 0, -20],
                 }}
                 transition={{
                   duration: 1,
-                  times: [0, 0.2, 0.5, 0.8, 1],
+                  times: [0, 0.2, 0.8, 1],
                   ease: "easeInOut",
                 }}
                 className="font-serif text-7xl font-light tracking-wider"
@@ -59,7 +70,7 @@ export default function Template({ children }: { children: React.ReactNode }) {
               }}
               transition={{
                 duration: 1,
-                times: [0, 0.3, 0.7, 1],
+                times: [0, 0.25, 0.75, 1],
               }}
               className="absolute top-1/2 left-1/4 right-1/4 h-px bg-gradient-to-r from-transparent via-gold to-transparent"
             />
@@ -81,33 +92,16 @@ export default function Template({ children }: { children: React.ReactNode }) {
                 transition={{
                   duration: 0.8,
                   delay: i * 0.08,
-                  ease: "easeInOut",
                 }}
               />
             ))}
           </motion.div>
-
-          {/* Opening Curtain - slides from center to left */}
-          <motion.div
-            initial={{ x: "0%" }}
-            animate={{ x: "-100%" }}
-            transition={{
-              duration: 0.5,
-              delay: 0.5,
-              ease: [0.76, 0, 0.24, 1],
-            }}
-            style={{
-              background:
-                "linear-gradient(90deg, #050508 0%, #0a0a12 50%, #0f0f1a 100%)",
-            }}
-            className="absolute inset-0"
-          />
-        </motion.div>
-      </AnimatePresence>
+        </div>
+      )}
 
       {/* Page Content */}
       <motion.div
-        key={`content-${pathname}`}
+        key={pathname}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.3, delay: 0.6 }}
