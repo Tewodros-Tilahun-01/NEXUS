@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create account — Nexus</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #050508;
+    --bg2:       #0A0A12;
+    --bg3:       #0F0F1A;
+    --gold:      #C9A84C;
+    --gold-soft: #E8D5A3;
+    --gold-dim:  rgba(201,168,76,0.10);
+    --gold-line: rgba(201,168,76,0.18);
+    --text:      #F0EDE8;
+    --muted:     #7A7890;
+    --dim:       #3A3850;
+    --red:       #E05555;
+    --green:     #4CAF82;
+    --serif:     'Cormorant Garamond', Georgia, serif;
+    --sans:      'Inter', system-ui, sans-serif;
+    --mono:      'JetBrains Mono', monospace;
+    --radius:    8px;
+    --radius-lg: 14px;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    align-items: stretch;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  canvas#bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* ── SPLIT LAYOUT ── */
+  .left-panel {
+    position: relative;
+    z-index: 1;
+    flex: 0 0 46%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 60px 64px;
+    border-right: 0.5px solid var(--gold-line);
+    background: rgba(5,5,8,0.55);
+  }
+
+  .right-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 48px;
+    position: relative;
+    z-index: 1;
+    overflow-y: auto;
+  }
+
+  /* ── LOGO ── */
+  .logo {
+    font-family: var(--serif);
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--gold);
+    text-decoration: none;
+    letter-spacing: 0.06em;
+    display: inline-block;
+    margin-bottom: 72px;
+  }
+
+  .logo span { color: var(--text); }
+
+  /* ── LEFT ── */
+  .panel-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .panel-eyebrow::after {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 0.5px;
+    background: var(--gold);
+    opacity: 0.4;
+  }
+
+  .panel-heading {
+    font-family: var(--serif);
+    font-size: clamp(38px, 3.5vw, 52px);
+    font-weight: 300;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    margin-bottom: 20px;
+  }
+
+  .panel-heading em { font-style: italic; color: var(--gold); }
+
+  .panel-sub {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.8;
+    max-width: 320px;
+    margin-bottom: 48px;
+  }
+
+  /* ── PERKS ── */
+  .perks {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 48px;
+  }
+
+  .perk {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .perk-dot {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: var(--gold-dim);
+    border: 0.5px solid var(--gold-line);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .perk-dot svg { color: var(--gold); }
+
+  .perk-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+
+  .perk-desc {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* ── PROGRESS ── */
+  .progress-bar {
+    height: 2px;
+    background: var(--dim);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 40px;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold), var(--gold-soft));
+    border-radius: 2px;
+    transition: width 0.4s ease;
+  }
+
+  .step-indicator {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 32px;
+  }
+
+  .step-dot {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    transition: color 0.3s;
+  }
+
+  .step-dot.active { color: var(--gold); }
+  .step-dot.done   { color: var(--green); }
+
+  .step-circle {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 0.5px solid var(--dim);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    transition: all 0.3s;
+  }
+
+  .step-dot.active .step-circle { border-color: var(--gold); color: var(--gold); background: var(--gold-dim); }
+  .step-dot.done   .step-circle { border-color: var(--green); color: var(--green); background: rgba(76,175,130,0.1); }
+
+  /* ── FORM CARD ── */
+  .form-card {
+    width: 100%;
+    max-width: 420px;
+  }
+
+  .form-top {
+    margin-bottom: 32px;
+  }
+
+  .form-top h1 {
+    font-family: var(--serif);
+    font-size: 30px;
+    font-weight: 300;
+    margin-bottom: 6px;
+  }
+
+  .form-top h1 em { font-style: italic; color: var(--gold); }
+
+  .form-top p {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .form-top p a {
+    color: var(--gold);
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+
+  .form-top p a:hover { opacity: 0.75; }
+
+  /* ── SOCIAL ── */
+  .social-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+
+  .social-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 11px 12px;
+    background: transparent;
+    border: 0.5px solid var(--dim);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 13px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .social-btn:hover { border-color: var(--gold-line); background: var(--gold-dim); }
+
+  /* ── DIVIDER ── */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 0.5px;
+    background: var(--dim);
+  }
+
+  .divider span {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* ── FIELDS ── */
+  .field {
+    margin-bottom: 14px;
+    position: relative;
+  }
+
+  .field label {
+    display: block;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+
+  .field input, .field select {
+    width: 100%;
+    background: var(--bg2);
+    border: 0.5px solid var(--dim);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 14px;
+    padding: 12px 16px;
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+    -webkit-font-smoothing: antialiased;
+    appearance: none;
+  }
+
+  .field input::placeholder { color: var(--muted); opacity: 0.55; }
+
+  .field input:focus, .field select:focus {
+    border-color: var(--gold);
+    background: rgba(201,168,76,0.04);
+  }
+
+  .field input.error { border-color: var(--red); }
+
+  .field-error {
+    display: none;
+    font-size: 11px;
+    color: var(--red);
+    margin-top: 5px;
+  }
+
+  .field input.error + .field-error,
+  .field input.error ~ .field-error { display: block; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  /* ── PASSWORD STRENGTH ── */
+  .pw-wrap { position: relative; }
+
+  .toggle-pw {
+    position: absolute;
+    right: 14px;
+    top: 13px;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: var(--muted);
+    line-height: 0;
+    transition: color 0.2s;
+  }
+
+  .toggle-pw:hover { color: var(--gold-soft); }
+
+  .pw-input { padding-right: 42px !important; }
+
+  .strength-bar {
+    display: flex;
+    gap: 4px;
+    margin-top: 8px;
+  }
+
+  .strength-seg {
+    flex: 1;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--dim);
+    transition: background 0.3s;
+  }
+
+  .strength-seg.fill-weak   { background: var(--red); }
+  .strength-seg.fill-fair   { background: #E8A23A; }
+  .strength-seg.fill-strong { background: var(--gold); }
+  .strength-seg.fill-great  { background: var(--green); }
+
+  .strength-label {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 4px;
+    min-height: 16px;
+    transition: color 0.3s;
+  }
+
+  /* ── CHECKBOX ── */
+  .check-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 6px;
+    margin-bottom: 20px;
+  }
+
+  .check-row input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--gold);
+    flex-shrink: 0;
+    margin-top: 2px;
+    cursor: pointer;
+  }
+
+  .check-row label {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+    cursor: pointer;
+  }
+
+  .check-row label a { color: var(--gold); text-decoration: none; }
+  .check-row label a:hover { opacity: 0.75; }
+
+  /* ── SUBMIT ── */
+  .btn-submit {
+    width: 100%;
+    background: var(--gold);
+    border: none;
+    border-radius: var(--radius);
+    color: #060508;
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    padding: 14px;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.15s;
+    margin-bottom: 20px;
+  }
+
+  .btn-submit:hover { opacity: 0.88; transform: translateY(-1px); }
+  .btn-submit:active { transform: scale(0.99); }
+  .btn-submit.loading { opacity: 0.55; cursor: not-allowed; transform: none; }
+
+  /* ── SECURE NOTE ── */
+  .secure-note {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.03em;
+  }
+
+  /* ── ALERT ── */
+  .alert {
+    display: none;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    border-radius: var(--radius);
+    font-size: 13px;
+    margin-bottom: 18px;
+  }
+
+  .alert.show    { display: flex; }
+  .alert.success { background: rgba(76,175,130,0.1); border: 0.5px solid rgba(76,175,130,0.3); color: var(--green); }
+  .alert.error   { background: rgba(224,85,85,0.1);  border: 0.5px solid rgba(224,85,85,0.3);  color: var(--red); }
+
+  @media (max-width: 900px) {
+    body { flex-direction: column; }
+    .left-panel { display: none; }
+    .right-panel { padding: 80px 20px 48px; }
+    .two-col { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="bg"></canvas>
+
+<!-- LEFT PANEL -->
+<div class="left-panel">
+  <a href="nexus-crypto.html" class="logo">NEX<span>US</span></a>
+
+  <div class="panel-eyebrow">Join Nexus</div>
+  <h2 class="panel-heading">Start your<br><em>wealth journey</em><br>today.</h2>
+  <p class="panel-sub">Thousands of investors open a Nexus account every day. Set up in under 3 minutes — no minimum deposit required.</p>
+
+  <div class="perks">
+    <div class="perk">
+      <div class="perk-dot">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+      </div>
+      <div>
+        <div class="perk-title">350+ assets, one account</div>
+        <div class="perk-desc">Trade Bitcoin, Ethereum, altcoins, and derivatives all from a single, unified dashboard.</div>
+      </div>
+    </div>
+    <div class="perk">
+      <div class="perk-dot">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      </div>
+      <div>
+        <div class="perk-title">Institutional-grade security</div>
+        <div class="perk-desc">Cold storage, two-factor auth, and a $650M insurance policy protect your assets 24/7.</div>
+      </div>
+    </div>
+    <div class="perk">
+      <div class="perk-dot">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </div>
+      <div>
+        <div class="perk-title">Zero fees for 30 days</div>
+        <div class="perk-desc">New accounts trade commission-free for the first month. No catches, no minimums.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RIGHT PANEL -->
+<div class="right-panel">
+  <div class="form-card">
+
+    <!-- STEP INDICATOR -->
+    <div class="step-indicator" id="step-indicator">
+      <div class="step-dot active" id="step1-dot">
+        <div class="step-circle">1</div>Account
+      </div>
+      <div class="step-dot" id="step2-dot">
+        <div class="step-circle">2</div>Security
+      </div>
+      <div class="step-dot" id="step3-dot">
+        <div class="step-circle">3</div>Done
+      </div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progress" style="width:33%"></div></div>
+
+    <div class="form-top" id="form-top">
+      <h1>Create <em>account</em></h1>
+      <p>Already a member? <a href="nexus-login.html">Sign in →</a></p>
+    </div>
+
+    <div class="alert" id="alert" role="alert"></div>
+
+    <!-- ── STEP 1 ── -->
+    <div id="step1">
+      <div class="social-row">
+        <a href="#" class="social-btn" onclick="socialSignup('Google'); return false;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+          </svg>
+          Continue with Google
+        </a>
+        <a href="#" class="social-btn" onclick="socialSignup('Apple'); return false;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+          </svg>
+          Continue with Apple
+        </a>
+      </div>
+
+      <div class="divider"><span>or fill in the form</span></div>
+
+      <div class="two-col">
+        <div class="field">
+          <label for="fname">First name</label>
+          <input type="text" id="fname" placeholder="Amir" autocomplete="given-name">
+          <span class="field-error">Required.</span>
+        </div>
+        <div class="field">
+          <label for="lname">Last name</label>
+          <input type="text" id="lname" placeholder="Tessema" autocomplete="family-name">
+          <span class="field-error">Required.</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="email">Email address</label>
+        <input type="email" id="email" placeholder="you@example.com" autocomplete="email">
+        <span class="field-error">Please enter a valid email.</span>
+      </div>
+
+      <div class="field">
+        <label for="country">Country of residence</label>
+        <select id="country">
+          <option value="" disabled selected>Select country…</option>
+          <option value="ET">Ethiopia</option>
+          <option value="NG">Nigeria</option>
+          <option value="KE">Kenya</option>
+          <option value="ZA">South Africa</option>
+          <option value="GH">Ghana</option>
+          <option value="US">United States</option>
+          <option value="GB">United Kingdom</option>
+          <option value="DE">Germany</option>
+          <option value="FR">France</option>
+          <option value="IN">India</option>
+          <option value="JP">Japan</option>
+          <option value="SG">Singapore</option>
+          <option value="AE">UAE</option>
+        </select>
+      </div>
+
+      <button class="btn-submit" onclick="goStep2()">Continue →</button>
+    </div>
+
+    <!-- ── STEP 2 ── -->
+    <div id="step2" style="display:none">
+      <div class="field">
+        <label for="pw1">Create password</label>
+        <div class="pw-wrap">
+          <input type="password" id="pw1" placeholder="At least 8 characters" class="pw-input" autocomplete="new-password" oninput="checkStrength(this.value)">
+          <button type="button" class="toggle-pw" onclick="togglePw('pw1', this)" aria-label="Show password">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+        <div class="strength-bar">
+          <div class="strength-seg" id="s1"></div>
+          <div class="strength-seg" id="s2"></div>
+          <div class="strength-seg" id="s3"></div>
+          <div class="strength-seg" id="s4"></div>
+        </div>
+        <div class="strength-label" id="strength-lbl"></div>
+      </div>
+
+      <div class="field">
+        <label for="pw2">Confirm password</label>
+        <div class="pw-wrap">
+          <input type="password" id="pw2" placeholder="Repeat password" class="pw-input" autocomplete="new-password">
+          <button type="button" class="toggle-pw" onclick="togglePw('pw2', this)" aria-label="Show password">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+        <span class="field-error" id="pw-match-err">Passwords do not match.</span>
+      </div>
+
+      <div class="check-row">
+        <input type="checkbox" id="terms">
+        <label for="terms">I agree to Nexus's <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>, and confirm I am 18 or older.</label>
+      </div>
+
+      <div class="check-row" style="margin-top:-12px">
+        <input type="checkbox" id="marketing">
+        <label for="marketing">Send me market insights, product updates, and occasional promotions.</label>
+      </div>
+
+      <button class="btn-submit" id="submit-btn" onclick="submitForm()">Create my account</button>
+
+      <div style="text-align:center;margin-bottom:16px">
+        <a href="#" onclick="goStep1(); return false;" style="font-size:12px;color:var(--muted);text-decoration:none;">← Back to account details</a>
+      </div>
+    </div>
+
+    <!-- ── STEP 3 (SUCCESS) ── -->
+    <div id="step3" style="display:none;text-align:center;padding:20px 0">
+      <div style="width:64px;height:64px;border-radius:50%;background:rgba(76,175,130,0.1);border:0.5px solid rgba(76,175,130,0.35);display:flex;align-items:center;justify-content:center;margin:0 auto 24px">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h2 style="font-family:var(--serif);font-size:28px;font-weight:300;margin-bottom:10px">Welcome to <em style="color:var(--gold);font-style:italic">Nexus.</em></h2>
+      <p style="font-size:14px;color:var(--muted);line-height:1.7;max-width:300px;margin:0 auto 32px">Your account has been created. Check your email to verify your address, then start trading.</p>
+      <a href="nexus-login.html" class="btn-submit" style="display:inline-block;width:auto;padding:13px 36px;text-decoration:none;border-radius:var(--radius)">Go to sign in →</a>
+    </div>
+
+    <div class="secure-note" id="secure-note">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      256-bit SSL · Your data is never sold
+    </div>
+
+  </div>
+</div>
+
+<script>
+/* ── CONSTELLATION ── */
+(function(){
+  const c = document.getElementById('bg'), ctx = c.getContext('2d');
+  let W, H, nodes = [];
+  const N = 55, D = 140;
+  function resize(){ W = c.width = innerWidth; H = c.height = innerHeight; }
+  function mk(){ return { x:Math.random()*W, y:Math.random()*H, vx:(Math.random()-.5)*.25, vy:(Math.random()-.5)*.25, r:Math.random()*1.2+.4, p:Math.random()*Math.PI*2 }; }
+  resize(); for(let i=0;i<N;i++) nodes.push(mk());
+  window.addEventListener('resize', resize);
+  let mx=-9999, my=-9999;
+  window.addEventListener('mousemove', e=>{ mx=e.clientX; my=e.clientY; });
+  function frame(){
+    ctx.clearRect(0,0,W,H);
+    nodes.forEach(n=>{
+      n.x+=n.vx; n.y+=n.vy; n.p+=.016;
+      if(n.x<0||n.x>W) n.vx*=-1; if(n.y<0||n.y>H) n.vy*=-1;
+      const md=Math.hypot(n.x-mx,n.y-my);
+      if(md<160){ const f=(1-md/160)*.5; n.vx+=(n.x-mx)/md*f*.07; n.vy+=(n.y-my)/md*f*.07; }
+      const sp=Math.hypot(n.vx,n.vy); if(sp>.8){ n.vx=n.vx/sp*.8; n.vy=n.vy/sp*.8; }
+    });
+    for(let i=0;i<nodes.length;i++) for(let j=i+1;j<nodes.length;j++){
+      const d=Math.hypot(nodes[i].x-nodes[j].x,nodes[i].y-nodes[j].y);
+      if(d<D){ ctx.beginPath(); ctx.moveTo(nodes[i].x,nodes[i].y); ctx.lineTo(nodes[j].x,nodes[j].y);
+        ctx.strokeStyle=`rgba(201,168,76,${(1-d/D)*.18})`; ctx.lineWidth=.5; ctx.stroke(); }
+    }
+    nodes.forEach(n=>{ const g=.5+Math.sin(n.p)*.5;
+      ctx.beginPath(); ctx.arc(n.x,n.y,n.r*(1+g*.4),0,Math.PI*2);
+      ctx.fillStyle=`rgba(201,168,76,${.3+g*.4})`; ctx.fill(); });
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+
+/* ── SOCIAL SIGNUP ── */
+function socialSignup(provider) {
+  showAlert('success', `Redirecting to ${provider} sign-up…`);
+}
+
+/* ── ALERT ── */
+function showAlert(type, msg) {
+  const el = document.getElementById('alert');
+  el.textContent = msg;
+  el.className = `alert show ${type}`;
+  setTimeout(() => el.className = 'alert', 4000);
+}
+
+/* ── PASSWORD TOGGLE ── */
+function togglePw(id, btn) {
+  const inp = document.getElementById(id);
+  const shown = inp.type === 'text';
+  inp.type = shown ? 'password' : 'text';
+  const svg = btn.querySelector('svg');
+  svg.innerHTML = shown
+    ? '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>'
+    : '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
+}
+
+/* ── STRENGTH ── */
+function checkStrength(val) {
+  let score = 0;
+  if(val.length >= 8)                      score++;
+  if(/[A-Z]/.test(val))                    score++;
+  if(/[0-9]/.test(val))                    score++;
+  if(/[^A-Za-z0-9]/.test(val) && val.length >= 10) score++;
+
+  const segs = ['s1','s2','s3','s4'];
+  const classes = ['fill-weak','fill-fair','fill-strong','fill-great'];
+  const labels  = ['','Weak','Fair','Strong','Great'];
+  const colors  = ['','var(--red)','#E8A23A','var(--gold)','var(--green)'];
+
+  segs.forEach((id,i) => {
+    const el = document.getElementById(id);
+    el.className = 'strength-seg';
+    if(i < score) el.classList.add(classes[Math.max(0,score-1)]);
+  });
+
+  const lbl = document.getElementById('strength-lbl');
+  lbl.textContent = val.length ? labels[score] || 'Great' : '';
+  lbl.style.color = colors[score] || colors[4];
+}
+
+/* ── STEPS ── */
+function setStep(n) {
+  [1,2,3].forEach(i => {
+    document.getElementById(`step${i}`).style.display = i===n ? 'block' : 'none';
+    const dot = document.getElementById(`step${i}-dot`);
+    dot.className = 'step-dot' + (i<n?' done':i===n?' active':'');
+    if(i<n) dot.querySelector('.step-circle').textContent = '✓';
+    else dot.querySelector('.step-circle').textContent = i;
+  });
+  document.getElementById('progress').style.width = `${Math.round(n/3*100)}%`;
+  if(n===3){
+    document.getElementById('form-top').style.display = 'none';
+    document.getElementById('secure-note').style.display = 'none';
+  }
+}
+
+function goStep1() { setStep(1); }
+
+function goStep2() {
+  const fname = document.getElementById('fname');
+  const lname = document.getElementById('lname');
+  const email = document.getElementById('email');
+  let ok = true;
+
+  [fname, lname].forEach(el => {
+    el.classList.toggle('error', !el.value.trim());
+    if(!el.value.trim()) ok = false;
+  });
+
+  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value);
+  email.classList.toggle('error', !emailOk);
+  if(!emailOk) ok = false;
+
+  if(ok) setStep(2);
+}
+
+function submitForm() {
+  const pw1 = document.getElementById('pw1');
+  const pw2 = document.getElementById('pw2');
+  const terms = document.getElementById('terms');
+  let ok = true;
+
+  if(pw1.value.length < 8){ pw1.classList.add('error'); ok = false; }
+  else pw1.classList.remove('error');
+
+  const match = pw1.value === pw2.value;
+  pw2.classList.toggle('error', !match);
+  document.getElementById('pw-match-err').style.display = match ? 'none' : 'block';
+  if(!match) ok = false;
+
+  if(!terms.checked){
+    showAlert('error', 'Please accept the terms of service to continue.');
+    ok = false;
+  }
+
+  if(!ok) return;
+
+  const btn = document.getElementById('submit-btn');
+  btn.textContent = 'Creating account…';
+  btn.classList.add('loading');
+
+  setTimeout(() => {
+    setStep(3);
+  }, 2000);
+}
+
+/* ── REAL-TIME VALIDATION ── */
+document.getElementById('email').addEventListener('blur', function(){
+  this.classList.toggle('error', !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.value));
+});
+</script>
+</body>
+</html>
