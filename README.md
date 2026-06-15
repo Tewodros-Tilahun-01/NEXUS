@@ -1,36 +1,111 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Nexus
+
+The frontend for Nexus, a premium digital asset trading platform. Built with modern web technologies for a smooth, responsive trading experience.
+
+## Features
+
+- **Modern UI** — Elegant, responsive interface built with React and Tailwind CSS
+- **Smooth animations** — Framer Motion powered transitions and interactions
+- **Market display** — Beautiful presentation of 350+ digital assets
+- **Trading dashboard** — Institutional-grade interface for serious investors
+- **Multi-page experience** — Features, how-it-works, markets, authentication flows
+
+## Tech Stack
+
+- **Framework**: [Next.js 16.2.9](https://nextjs.org) with React 19
+- **Styling**: [Tailwind CSS 4](https://tailwindcss.com)
+- **Animation**: [Framer Motion](https://www.framer.com/motion)
+- **Language**: TypeScript
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18+
+- npm, yarn, pnpm, or bun
+
+### Installation
+
+Clone the repository and install dependencies:
+
+```bash
+npm install
+```
+
+### Development
+
+Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to view the site in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Build
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Create an optimized production build:
 
-## Learn More
+```bash
+npm run build
+npm start
+```
 
-To learn more about Next.js, take a look at the following resources:
+### Linting
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Check code quality:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npm run lint
+```
 
-## Deploy on Vercel
+## Project Structure
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+├── app/                  # Next.js app directory
+│   ├── page.tsx         # Homepage
+│   ├── login/           # Login page
+│   ├── signup/          # Signup page
+│   ├── features/        # Features page
+│   ├── company/         # Company page
+│   ├── markets/         # Markets page
+│   └── how-it-works/    # How it works page
+├── components/          # Reusable React components
+│   ├── Hero.tsx         # Hero section
+│   ├── Features.tsx     # Features showcase
+│   ├── Markets.tsx      # Markets display
+│   ├── HowItWorks.tsx   # Process explanation
+│   ├── Nav.tsx          # Navigation
+│   └── ...
+└── public/              # Static assets
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Performance
+
+The site is optimized for speed and performance:
+
+- Next.js App Router with server-side rendering
+- Framer Motion for smooth animations
+- Tailwind CSS for utility-first styling
+- Image and font optimization built-in
+
+## Deployment
+
+Deploy to [Vercel](https://vercel.com) with a single click:
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FYOUR_USERNAME%2FNEXUS)
+
+Or deploy to any Node.js hosting platform:
+
+```bash
+npm run build
+npm start
+```
+
+## License
+
+Proprietary. All rights reserved.
+
+## Support
+
+For questions or feedback, please contact support@nexus.com
